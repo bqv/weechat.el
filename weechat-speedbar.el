@@ -63,21 +63,26 @@
 (defun weechat-speedbar--buttons (_directory depth)
   "Create buttons for speedbar in BUFFER."
   (erase-buffer)
-  (maphash
-   #'(lambda (_k v)
-       (let* ((local-vars (gethash "local_variables" v))
-              (type (cdr (assoc-string "type" local-vars)))
-              (name (cdr (assoc-string "name" local-vars)))
-              (server (cdr (assoc-string "server" local-vars))))
-         (when (string= type "server")
-           (speedbar-with-writable
-             (speedbar-make-tag-line
-              'bracket ?+
-              #'weechat-speedbar--expand-server server
-              server
-              #'weechat-speedbar--goto-buffer name
-              nil depth)))))
-   weechat--buffer-hashes))
+  (let (vs)
+    (maphash
+     #'(lambda (_k v)
+         (setq vs (cons v vs)))
+     weechat--buffer-hashes)
+    (mapc
+     #'(lambda (v)
+         (let* ((local-vars (gethash "local_variables" v))
+                (type (cdr (assoc-string "type" local-vars)))
+                (name (cdr (assoc-string "name" local-vars)))
+                (server (cdr (assoc-string "server" local-vars))))
+           (when (string= type "server")
+             (speedbar-with-writable
+               (speedbar-make-tag-line
+                'bracket ?+
+                #'weechat-speedbar--expand-server server
+                server
+                #'weechat-speedbar--goto-buffer name
+                nil depth)))))
+     vs)))
 
 (defun weechat-speedbar--expand-server (text server indent)
   (cond ((string-match "+" text) ; expand node
@@ -94,33 +99,38 @@
   (speedbar-center-buffer-smartly))
 
 (defun weechat-speedbar--channel-buttons (_directory depth for-server)
-  (maphash
-   #'(lambda (_k v)
-       (let* ((local-vars (gethash "local_variables" v))
-              (type (cdr (assoc-string "type" local-vars)))
-              (name (cdr (assoc-string "name" local-vars)))
-              (channel (cdr (assoc-string "channel" local-vars)))
-              (server (cdr (assoc-string "server" local-vars))))
-         (when (string= server for-server)
-           (cond
-            ((string= type "channel")
-             (speedbar-with-writable
-               (speedbar-make-tag-line
-                'bracket ?+
-                #'weechat-speedbar--expand-channel name
-                channel
-                #'weechat-speedbar--goto-buffer name
-                nil depth)))
-            ((string= type "private")
-             (speedbar-with-writable
+  (let (vs)
+    (maphash
+     #'(lambda (_k v)
+         (setq vs (cons v vs)))
+     weechat--buffer-hashes)
+    (mapc
+     #'(lambda (v)
+         (let* ((local-vars (gethash "local_variables" v))
+                (type (cdr (assoc-string "type" local-vars)))
+                (name (cdr (assoc-string "name" local-vars)))
+                (channel (cdr (assoc-string "channel" local-vars)))
+                (server (cdr (assoc-string "server" local-vars))))
+           (when (string= server for-server)
+             (cond
+              ((string= type "channel")
                (speedbar-with-writable
-                 (speedbar-make-tag-line ;; TODO org-contacts/gravatar/bbdb?
-                  nil nil
-                  nil nil ;; TODO expand for whois?
+                 (speedbar-make-tag-line
+                  'bracket ?+
+                  #'weechat-speedbar--expand-channel name
                   channel
                   #'weechat-speedbar--goto-buffer name
-                  nil depth))))))))
-   weechat--buffer-hashes))
+                  nil depth)))
+              ((string= type "private")
+               (speedbar-with-writable
+                 (speedbar-with-writable
+                   (speedbar-make-tag-line ;; TODO org-contacts/gravatar/bbdb?
+                    nil nil
+                    nil nil ;; TODO expand for whois?
+                    channel
+                    #'weechat-speedbar--goto-buffer name
+                    nil depth))))))))
+     vs)))
 
 (defun weechat-speedbar--expand-channel (text name indent)
    (cond ((string-match "+" text) ; expand node
