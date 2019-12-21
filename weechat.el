@@ -190,7 +190,7 @@ text-column will be increased for that line."
   :type 'integer
   :group 'weechat)
 
-(defcustom weechat-max-nick-length nil
+(defcustom weechat-max-nick-length 12
   "Maximum length of nicknames. Longer nicks will be truncated.
 
 Note that this option will apply to all prefixes, not just
