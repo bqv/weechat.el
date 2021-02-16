@@ -67,6 +67,50 @@
   "Weechat face used to display errors."
   :group 'weechat-faces)
 
+(defface weechat-privmsg-face '((t :inherit default))
+  "Weechat face used to display privmsgs."
+  :group 'weechat-faces)
+
+(defface weechat-action-face '((t :inherit default))
+  "Weechat face used to display actions."
+  :group 'weechat-faces)
+
+(defface weechat-notice-face '((t :inherit default))
+  "Weechat face used to display notices."
+  :group 'weechat-faces)
+
+(defface weechat-join-face '((t :inherit default))
+  "Weechat face used to display joins."
+  :group 'weechat-faces)
+
+(defface weechat-part-face '((t :inherit default))
+  "Weechat face used to display parts."
+  :group 'weechat-faces)
+
+(defface weechat-quit-face '((t :inherit default))
+  "Weechat face used to display quits."
+  :group 'weechat-faces)
+
+(defface weechat-mode-face '((t :inherit default))
+  "Weechat face used to display mode changes."
+  :group 'weechat-faces)
+
+(defface weechat-nick-face '((t :inherit default))
+  "Weechat face used to display nickchanges."
+  :group 'weechat-faces)
+
+(defface weechat-topic-face '((t :inherit default))
+  "Weechat face used to display topic changes."
+  :group 'weechat-faces)
+
+(defface weechat-numeric-face '((t :inherit default))
+  "Weechat face used to display numeric lines."
+  :group 'weechat-faces)
+
+(defface weechat-default-face '((t :inherit default))
+  "Weechat face used to display normal message text."
+  :group 'weechat-faces)
+
 (defcustom weechat-strip-formatting nil
   "Remove every kind of formatting or color from messages.
 This will look very bland!"
